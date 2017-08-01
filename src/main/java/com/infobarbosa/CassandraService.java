@@ -11,7 +11,7 @@ public class CassandraService{
 	private Cluster cluster = null;
 	private Session session = null;
 
-	public CassandraService(){
+	private CassandraService(){
 		cluster = Cluster.builder()
             			 .addContactPoint("127.0.0.1")
             			 .build();
