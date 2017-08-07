@@ -8,15 +8,17 @@ import com.datastax.driver.core.BoundStatement;
 public class CassandraService{
 	
 	private static CassandraService cassandraService;
+	private final static String CASSANDRA_ENDPOINT = System.getenv("CASSANDRA_ENDPOINT");
+	private final static String CASSANDRA_KEYSPACE = System.getenv("CASSANDRA_KEYSPACE");
 	private Cluster cluster = null;
 	private Session session = null;
 
 	private CassandraService(){
 		cluster = Cluster.builder()
-            			 .addContactPoint("127.0.0.1")
+            			 .addContactPoint( CASSANDRA_ENDPOINT )
             			 .build();
     	
-    	session = cluster.connect("twitter");
+    	session = cluster.connect( CASSANDRA_KEYSPACE );
 	}
 
 	public static CassandraService getInstance(){
@@ -29,7 +31,7 @@ public class CassandraService{
 
 	public void save(String id, String tweet){
 		System.out.println("Salvando tweet com chave " + id );
-		PreparedStatement stmt = session.prepare("insert into twitter.tweets(id, tweet) values(?, ?)");
+		PreparedStatement stmt = session.prepare("insert into tweets(id, tweet) values(?, ?)");
 		BoundStatement bound = stmt.bind(id, tweet);
 		session.execute(bound);
 		System.out.println("Tweet com chave " + id + " salvo.");
